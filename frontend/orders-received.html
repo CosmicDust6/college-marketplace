@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Orders Received | College Marketplace</title>
+  <link rel="stylesheet" href="fieldproject.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo">🎓 College Marketplace</div>
+    <ul class="nav-links">
+      <li><a href="dashboard.html"><i class="fa-solid fa-house"></i> Home</a></li>
+      <li><a href="orders-received.html" class="active"><i class="fa-solid fa-box"></i> Orders Received</a></li>
+      <li><a href="sold.html"><i class="fa-solid fa-dollar-sign"></i> Sold</a></li>
+      <li><a href="products.html"><i class="fa-solid fa-cart-shopping"></i> Products</a></li>
+      <li><a href="profile.html"><i class="fa-solid fa-user"></i> Profile</a></li>
+    </ul>
+  </nav>
+
+  <section class="orders-container">
+    <h1 class="orders-heading">Orders Received</h1>
+    <div id="ordersList"></div>
+  </section>
+
+  <script>
+    const token = localStorage.getItem("token");
+    const ordersList = document.getElementById("ordersList");
+
+    if (!token) {
+      alert("Please login first.");
+      window.location.href = "login.html";
+    }
+
+    async function fetchOrders() {
+      try {
+        ordersList.innerHTML = "<p class='no-orders'>Loading received orders...</p>";
+
+        const res = await fetch("http://localhost:5000/api/orders/received", {
+          headers: { "Authorization": `Bearer ${token}` }
+        });
+
+        const orders = await res.json();
+        ordersList.innerHTML = "";
+
+        if (orders.length === 0) {
+          ordersList.innerHTML = "<p class='no-orders'>No orders received yet.</p>";
+          return;
+        }
+
+        orders.forEach(o => {
+          const card = document.createElement("div");
+          card.className = "order-card";
+          card.innerHTML = `
+            <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=400&q=60" alt="Product Image" />
+            <div class="order-details">
+              <h3>${o.product_name}</h3>
+              <p><b>Price:</b> ₹${o.price}</p>
+              <p><b>Buyer:</b> ${o.buyer_name}</p>
+              <p><b>Pickup:</b> ${o.pickup_point}</p>
+              <p><b>Status:</b> <span class="${o.status === "Pending" ? "pending" : "status"}">${o.status}</span></p>
+              ${
+                o.status === "Pending"
+                  ? `<button class="mark-btn" onclick="markAsDispatched(${o.id})">Mark as Dispatched</button>`
+                  : ""
+              }
+              <p><small>Ordered on: ${new Date(o.order_date).toLocaleString()}</small></p>
+            </div>
+          `;
+          ordersList.appendChild(card);
+        });
+      } catch (err) {
+        console.error("Error fetching received orders:", err);
+        ordersList.innerHTML = "<p class='no-orders'>Failed to load orders.</p>";
+      }
+    }
+
+    async function markAsDispatched(orderId) {
+      const confirmAction = confirm("Mark this order as dispatched?");
+      if (!confirmAction) return;
+
+      try {
+        const res = await fetch(`http://localhost:5000/api/orders/mark-dispatched/${orderId}`, {
+          method: "PUT",
+          headers: { "Authorization": `Bearer ${token}` }
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+          alert("✅ Order marked as Dispatched!");
+          fetchOrders();
+        } else {
+          alert("⚠️ " + (data.error || "Failed to update status."));
+        }
+      } catch (err) {
+        console.error("Error updating order:", err);
+        alert("Server error while updating order.");
+      }
+    }
+
+    fetchOrders();
+  </script>
+  <script src="navbar.js"></script>
+</body>
+</html>

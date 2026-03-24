@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Add Product</title>
+
+<link rel="stylesheet" href="fieldproject.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+</head>
+
+<body>
+
+<nav class="navbar">
+<div class="logo">College Marketplace</div>
+<ul class="nav-links">
+<li><a href="dashboard.html">Dashboard</a></li>
+<li><a href="products.html">Products</a></li>
+<li><a href="profile.html">Profile</a></li>
+</ul>
+</nav>
+
+<section class="hero">
+<div class="hero-text">
+
+<h1>Add Product</h1>
+
+<form id="addProductForm">
+
+<input id="name" placeholder="Product Name" required>
+<textarea id="description" placeholder="Description"></textarea>
+<input id="price" type="number" placeholder="Price" required>
+<input id="contact_number" placeholder="Contact Number">
+
+<select id="pickup_point">
+<option>Main Gate</option>
+<option>Sports Complex</option>
+<option>Canteen</option>
+</select>
+
+<button type="submit">Add Product</button>
+
+</form>
+
+</div>
+</section>
+
+<script>
+document.getElementById('addProductForm').addEventListener('submit', async (e)=>{
+e.preventDefault();
+
+const body={
+name:name.value,
+description:description.value,
+price:price.value,
+contact_number:contact_number.value,
+pickup_point:pickup_point.value
+};
+
+await fetch("http://localhost:5000/api/products/add",{
+method:"POST",
+headers:{
+"Content-Type":"application/json",
+"Authorization":"Bearer "+localStorage.getItem("token")
+},
+body:JSON.stringify(body)
+});
+
+alert("Added!");
+location.href="products.html";
+});
+</script>
+
+<script src="navbar.js"></script>
+
+</body>
+</html>

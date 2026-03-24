@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Seller Dashboard</title>
+
+<link rel="stylesheet" href="fieldproject.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+</head>
+
+<body>
+
+<nav class="navbar">
+<div class="logo">College Marketplace</div>
+
+<ul class="nav-links">
+<li><a href="dashboard.html">Dashboard</a></li>
+<li><a href="addproduct.html">Add Product</a></li>
+<li><a href="myproducts.html">My Products</a></li>
+<li><a href="products.html">All Products</a></li>
+<li><a href="sold.html">Sold</a></li>
+<li><a href="#" onclick="logout()">Logout</a></li>
+</ul>
+</nav>
+
+<section class="hero">
+<div class="hero-text dashboard">
+
+<h1 id="welcomeText">Seller Dashboard</h1>
+
+<div class="cards">
+
+<div class="card">
+<h2><i class="fa-solid fa-cart-plus"></i> Add Product</h2>
+<button onclick="location.href='addproduct.html'">Add</button>
+</div>
+
+<div class="card">
+<h2><i class="fa-solid fa-box"></i> My Products</h2>
+<button onclick="location.href='myproducts.html'">View</button>
+</div>
+
+<div class="card">
+<h2><i class="fa-solid fa-handshake"></i> Sold Items</h2>
+<button onclick="location.href='sold.html'">Open</button>
+</div>
+
+</div>
+
+</div>
+</section>
+
+<script>
+function logout(){
+localStorage.clear();
+location.href="login.html";
+}
+</script>
+
+<script src="navbar.js"></script>
+
+</body>
+</html>

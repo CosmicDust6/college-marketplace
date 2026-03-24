@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Profile</title>
+
+<link rel="stylesheet" href="fieldproject.css">
+</head>
+
+<body>
+
+<section class="hero">
+<div class="hero-text">
+
+<h1>Profile</h1>
+
+<p id="name"></p>
+<p id="email"></p>
+
+</div>
+</section>
+
+<script>
+const token=localStorage.getItem("token");
+
+fetch("http://localhost:5000/api/users/profile",{
+headers:{Authorization:"Bearer "+token}
+})
+.then(res=>res.json())
+.then(data=>{
+name.textContent=data.name;
+email.textContent=data.email;
+});
+</script>
+
+</body>
+</html>

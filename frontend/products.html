@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Products</title>
+
+<link rel="stylesheet" href="fieldproject.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+</head>
+
+<body>
+
+<nav class="navbar">
+<div class="logo">College Marketplace</div>
+<ul class="nav-links">
+<li><a href="products.html">Home</a></li>
+<li><a href="addproduct.html">Add Product</a></li>
+<li><a href="orders.html">Orders</a></li>
+<li><a href="profile.html">Profile</a></li>
+<li><a href="#" onclick="logout()">Logout</a></li>
+</ul>
+</nav>
+
+<div class="search-bar">
+<input type="text" id="search" placeholder="Search products...">
+</div>
+
+<div id="productList" class="product-list"></div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+const API_URL = "http://localhost:5000/api/products";
+const productList = document.getElementById("productList");
+const searchInput = document.getElementById("search");
+
+let allProducts = [];
+
+async function fetchProducts(){
+const res = await fetch(API_URL);
+allProducts = await res.json();
+displayProducts(allProducts);
+}
+
+function displayProducts(products){
+productList.innerHTML = "";
+
+products.forEach(p=>{
+const card=document.createElement("div");
+card.className="product-card";
+
+card.innerHTML=`
+<img src="https://via.placeholder.com/300">
+<div class="product-content">
+<h3>${p.name}</h3>
+<p>${p.description || ""}</p>
+
+<div class="product-price">₹${p.price}</div>
+
+<button onclick="buyProduct(${p.id})">Buy</button>
+</div>
+`;
+
+productList.appendChild(card);
+});
+}
+
+searchInput.addEventListener("input",()=>{
+const filtered = allProducts.filter(p =>
+p.name.toLowerCase().includes(searchInput.value.toLowerCase())
+);
+displayProducts(filtered);
+});
+
+function showToast(msg){
+const t=document.getElementById("toast");
+t.innerText=msg;
+t.style.display="block";
+setTimeout(()=>t.style.display="none",2000);
+}
+
+async function buyProduct(id){
+showToast("Order placed!");
+}
+
+function logout(){
+localStorage.clear();
+location.href="login.html";
+}
+
+fetchProducts();
+</script>
+
+</body>
+</html>

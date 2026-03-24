@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Buyer Dashboard</title>
+
+<link rel="stylesheet" href="fieldproject.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+</head>
+
+<body>
+
+<nav class="navbar">
+<div class="logo">College Marketplace</div>
+
+<ul class="nav-links">
+<li><a href="buyer_dashboard.html">Dashboard</a></li>
+<li><a href="products.html">Browse</a></li>
+<li><a href="orders.html">Orders</a></li>
+<li><a href="profile.html">Profile</a></li>
+<li><a href="#" onclick="logout()">Logout</a></li>
+</ul>
+</nav>
+
+<section class="hero">
+<div class="hero-text dashboard">
+
+<h1 id="welcomeText">Buyer Dashboard</h1>
+
+<div class="cards">
+
+<div class="card">
+<h2><i class="fa-solid fa-store"></i> Browse Products</h2>
+<button onclick="location.href='products.html'">Explore</button>
+</div>
+
+<div class="card">
+<h2><i class="fa-solid fa-box"></i> My Orders</h2>
+<button onclick="location.href='orders.html'">View</button>
+</div>
+
+<div class="card">
+<h2><i class="fa-solid fa-user"></i> Profile</h2>
+<button onclick="location.href='profile.html'">Open</button>
+</div>
+
+</div>
+
+</div>
+</section>
+
+<script>
+function logout(){
+localStorage.clear();
+location.href="login.html";
+}
+
+const token = localStorage.getItem("token");
+
+function parseJwt(token) {
+  try {
+    return JSON.parse(atob(token.split('.')[1]));
+  } catch {
+    return null;
+  }
+}
+
+if (token) {
+  const user = parseJwt(token);
+  if (user && user.email) {
+    const name = user.email.split("@")[0];
+    document.getElementById("welcomeText").textContent =
+      `Welcome back, ${name}! 👋`;
+  }
+}
+</script>
+
+<script src="navbar.js"></script>
+
+</body>
+</html>

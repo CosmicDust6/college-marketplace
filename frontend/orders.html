@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Orders</title>
+
+<link rel="stylesheet" href="fieldproject.css">
+</head>
+
+<body>
+
+<nav class="navbar">
+<div class="logo">College Marketplace</div>
+</nav>
+
+<section class="hero">
+<div class="hero-text">
+
+<h1>My Orders</h1>
+
+<div id="ordersList"></div>
+
+</div>
+</section>
+
+<script>
+const token=localStorage.getItem("token");
+
+async function fetchOrders(){
+const res=await fetch("http://localhost:5000/api/orders",{
+headers:{Authorization:"Bearer "+token}
+});
+
+const orders=await res.json();
+
+ordersList.innerHTML="";
+
+orders.forEach(o=>{
+const div=document.createElement("div");
+div.innerHTML=`${o.product_name} - ₹${o.price}`;
+ordersList.appendChild(div);
+});
+}
+
+fetchOrders();
+</script>
+
+</body>
+</html>

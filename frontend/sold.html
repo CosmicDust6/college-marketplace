@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Sold</title>
+
+<link rel="stylesheet" href="fieldproject.css">
+</head>
+
+<body>
+
+<section class="hero">
+<div class="hero-text">
+
+<h1>Sold Items</h1>
+
+<div id="soldList"></div>
+
+</div>
+</section>
+
+<script>
+fetch("http://localhost:5000/api/orders/sold",{
+headers:{Authorization:"Bearer "+localStorage.getItem("token")}
+})
+.then(res=>res.json())
+.then(data=>{
+data.forEach(i=>{
+const div=document.createElement("div");
+div.innerHTML=`${i.product_name} - ₹${i.price}`;
+soldList.appendChild(div);
+});
+});
+</script>
+
+</body>
+</html>

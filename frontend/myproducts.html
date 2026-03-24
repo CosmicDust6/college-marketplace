@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>My Products</title>
+
+<link rel="stylesheet" href="fieldproject.css">
+
+</head>
+
+<body>
+
+<nav class="navbar">
+<div class="logo">College Marketplace</div>
+<ul class="nav-links">
+<li><a href="dashboard.html">Dashboard</a></li>
+<li><a href="products.html">Products</a></li>
+</ul>
+</nav>
+
+<section class="hero">
+<div class="hero-text">
+
+<h1>My Products</h1>
+
+<div id="productList" class="product-list"></div>
+
+</div>
+</section>
+
+<script>
+const token=localStorage.getItem("token");
+
+async function fetchMyProducts(){
+const res=await fetch("http://localhost:5000/api/products/seller",{
+headers:{Authorization:"Bearer "+token}
+});
+const products=await res.json();
+
+productList.innerHTML="";
+
+products.forEach(p=>{
+const card=document.createElement("div");
+card.className="product-card";
+
+card.innerHTML=`
+<h3>${p.name}</h3>
+<p>${p.description}</p>
+<p>₹${p.price}</p>
+`;
+
+productList.appendChild(card);
+});
+}
+
+fetchMyProducts();
+</script>
+
+</body>
+</html>

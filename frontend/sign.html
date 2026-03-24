@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="fieldproject.css">
+<title>Signup</title>
+</head>
+<body>
+
+<section class="hero">
+<div class="hero-text">
+
+<h1>Sign Up</h1>
+
+<form id="signupForm">
+<input id="name" placeholder="Name" required>
+<input id="email" type="email" placeholder="Email" required>
+<input id="password" type="password" placeholder="Password" required>
+<input id="college" placeholder="College" required>
+
+<select id="role">
+<option>Buyer</option>
+<option>Seller</option>
+</select>
+
+<button>Register</button>
+</form>
+
+</div>
+</section>
+
+<script>
+document.getElementById("signupForm").addEventListener("submit", async(e)=>{
+ e.preventDefault();
+
+ const res = await fetch("http://localhost:5000/api/users/register",{
+  method:"POST",
+  headers:{"Content-Type":"application/json"},
+  body: JSON.stringify({
+    name:name.value,
+    email:email.value,
+    password:password.value,
+    role:role.value,
+    college:college.value
+  })
+ });
+
+ if(res.ok){
+  alert("Registered!");
+  window.location.href="login.html";
+ } else alert("Error");
+});
+</script>
+
+</body>
+</html>
