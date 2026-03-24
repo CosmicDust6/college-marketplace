@@ -20,7 +20,7 @@
 </section>
 
 <script>
-fetch("http://localhost:5000/api/orders/sold",{
+fetch("https://college-marketplace-4l3s.onrender.com/api/orders/sold",{
 headers:{Authorization:"Bearer "+localStorage.getItem("token")}
 })
 .then(res=>res.json())

@@ -32,7 +32,7 @@
 const token=localStorage.getItem("token");
 
 async function fetchMyProducts(){
-const res=await fetch("http://localhost:5000/api/products/seller",{
+const res=await fetch("https://college-marketplace-4l3s.onrender.com/api/products/seller",{
 headers:{Authorization:"Bearer "+token}
 });
 const products=await res.json();

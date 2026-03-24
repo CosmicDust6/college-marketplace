@@ -23,7 +23,7 @@
 <script>
 const token=localStorage.getItem("token");
 
-fetch("http://localhost:5000/api/users/profile",{
+fetch("https://college-marketplace-4l3s.onrender.com/api/users/profile",{
 headers:{Authorization:"Bearer "+token}
 })
 .then(res=>res.json())

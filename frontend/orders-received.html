@@ -38,7 +38,7 @@
       try {
         ordersList.innerHTML = "<p class='no-orders'>Loading received orders...</p>";
 
-        const res = await fetch("http://localhost:5000/api/orders/received", {
+        const res = await fetch("https://college-marketplace-4l3s.onrender.com/api/orders/received", {
           headers: { "Authorization": `Bearer ${token}` }
         });
 
@@ -82,7 +82,7 @@
       if (!confirmAction) return;
 
       try {
-        const res = await fetch(`http://localhost:5000/api/orders/mark-dispatched/${orderId}`, {
+        const res = await fetch(`https://college-marketplace-4l3s.onrender.com/api/orders/mark-dispatched/${orderId}`, {
           method: "PUT",
           headers: { "Authorization": `Bearer ${token}` }
         });
