@@ -8,32 +8,19 @@ const pool = mysql.createPool({
   port: process.env.MYSQLPORT,
 
   waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
-
-  enableKeepAlive: true,      // 🔥 important
-  keepAliveInitialDelay: 0
+  connectionLimit: 5,
+  queueLimit: 0
 });
 
-// 🔥 Auto reconnect wrapper
-async function query(sql, params) {
+// Test connection once
+(async () => {
   try {
-    const [rows] = await pool.query(sql, params);
-    return rows;
+    const conn = await pool.getConnection();
+    console.log("✅ DB Connected");
+    conn.release();
   } catch (err) {
-    console.error("❌ DB ERROR:", err);
-
-    // retry once if connection lost
-    if (err.code === "PROTOCOL_CONNECTION_LOST") {
-      console.log("🔄 Retrying DB query...");
-      const [rows] = await pool.query(sql, params);
-      return rows;
-    }
-
-    throw err;
+    console.error("❌ DB Error:", err);
   }
-}
+})();
 
-module.exports = {
-  query
-};
+module.exports = pool;

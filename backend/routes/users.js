@@ -10,30 +10,25 @@ const authenticateToken = require('../middleware/auth');
 // ✅ REGISTER
 router.post('/register', async (req, res) => {
   try {
-    const { name, email, password, roll_no, college } = req.body;
-
-    if (!name || !email || !password) {
-      return res.status(400).json({ error: 'Name, email, and password are required.' });
-    }
+    const { name, email, password } = req.body;
 
     const [existing] = await pool.query(
-      'SELECT * FROM users WHERE email = ?', 
+      'SELECT * FROM users WHERE email = ?',
       [email]
     );
 
     if (existing.length > 0) {
-      return res.status(400).json({ error: 'User already exists.' });
+      return res.status(400).json({ error: 'User already exists' });
     }
 
-    const salt = await bcrypt.genSalt(10);
-    const password_hash = await bcrypt.hash(password, salt);
+    const hashed = await bcrypt.hash(password, 10);
 
     await pool.query(
-      'INSERT INTO users (name, email, password_hash, roll_no, college) VALUES (?, ?, ?, ?, ?)',
-      [name, email, password_hash, roll_no, college]
+      'INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)',
+      [name, email, hashed]
     );
 
-    res.status(201).json({ message: 'User registered successfully ✅' });
+    res.json({ message: 'Signup successful' });
 
   } catch (err) {
     console.error("❌ REGISTER ERROR:", err);
@@ -42,44 +37,34 @@ router.post('/register', async (req, res) => {
 });
 
 // ✅ LOGIN
-router.post('/login', async (req, res) => {
+rrouter.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    if (!email || !password) {
-      return res.status(400).json({ error: 'Email and password are required.' });
-    }
-
-    const user = await pool.query(
-      'SELECT * FROM users WHERE email = ?', 
+    const [users] = await pool.query(
+      'SELECT * FROM users WHERE email = ?',
       [email]
     );
 
-    if (user.length === 0) {
-      return res.status(404).json({ error: 'User not found.' });
+    if (users.length === 0) {
+      return res.status(400).json({ error: 'User not found' });
     }
 
-    const validPassword = await bcrypt.compare(password, user[0].password_hash);
+    const user = users[0];
 
-    if (!validPassword) {
-      return res.status(401).json({ error: 'Invalid password.' });
+    const valid = await bcrypt.compare(password, user.password_hash);
+
+    if (!valid) {
+      return res.status(400).json({ error: 'Invalid password' });
     }
 
     const token = jwt.sign(
-      { id: user[0].id, email: user[0].email },
+      { id: user.id },
       process.env.JWT_SECRET,
-      { expiresIn: '1h' }
+      { expiresIn: "1h" }
     );
 
-    res.status(200).json({
-      message: 'Login successful ✅',
-      token,
-      user: {
-        id: user[0].id,
-        name: user[0].name,
-        email: user[0].email
-      }
-    });
+    res.json({ token });
 
   } catch (err) {
     console.error("❌ LOGIN ERROR:", err);
